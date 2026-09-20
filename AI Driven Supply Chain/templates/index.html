@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supply Chain Disruption Predictor</title>
+    <style>
+        body {
+            background-color: #eef2f7;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #1a3c5e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            color: #a8c8e8;
+            margin: 0;
+        }
+
+        .form-box {
+            background-color: white;
+            padding: 30px;
+            width: 500px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-box h3 {
+            color: #1a3c5e;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            border-bottom: 2px solid #eef2f7;
+            padding-bottom: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .symbol {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #dde3ea;
+            border-radius: 7px;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            background: #fafbfc;
+            color: #333;
+        }
+
+        input.has-symbol {
+            padding-left: 24px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1a3c5e;
+            background: white;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #1a3c5e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #15304d;
+        }
+
+        .result-box {
+            width: 500px;
+            margin: 20px auto;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .high {
+            background-color: #ffecec;
+            border: 1.5px solid red;
+            color: red;
+        }
+
+        .low {
+            background-color: #eaffea;
+            border: 1.5px solid green;
+            color: green;
+        }
+
+        .confidence-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 6px;
+            font-weight: normal;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🚚 Supply Chain Disruption Predictor</h1>
+        <p>AI-powered delivery risk analysis — trained on 180,000+ real shipments</p>
+    </div>
+
+    <div class="form-box">
+        <h3>📦 Enter Shipment Details</h3>
+        <form action="/predict" method="POST">
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Actual Shipping Days</label>
+                    <input type="number" name="days_real" placeholder="e.g. 4" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Scheduled Shipping Days</label>
+                    <input type="number" name="days_scheduled" placeholder="e.g. 3" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Benefit Per Order</label>
+                    <div class="input-wrapper">
+                        <span class="symbol">₹</span>
+                        <input type="number" name="benefit" placeholder="e.g. 500" required class="has-symbol">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Sales Per Customer</label>
+                    <div class="input-wrapper">
+                        <span class="symbol">₹</span>
+                        <input type="number" name="sales" placeholder="e.g. 2000" required class="has-symbol">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Order Quantity</label>
+                    <input type="number" name="quantity" placeholder="e.g. 10" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Discount Rate (0 to 1)</label>
+                    <input type="number" step="0.01" name="discount_rate" placeholder="e.g. 0.05" required>
+                </div>
+
+            </div>
+            <button type="submit">🔍 Predict Disruption Risk</button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="result-box {{ risk_level }}">
+        {{ result }}
+        {% if confidence %}
+        <div class="confidence-text">Model Confidence: {{ confidence }}%</div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        Built with Python · Flask · Scikit-learn · Random Forest Algorithm
+    </div>
+
+</body>
+</html>
